@@ -51,7 +51,6 @@ class IGCParser:
                 self.flight_info.j_section.flight_data[name] = (start_index, end_index)
             else:
                 print('unable to get extension parts from {}'.format(line))
-        print('FLIGHT DATA:', self.flight_info.j_section.flight_data)
 
     def _parse_k_section(self, line):
         if not self.found_j_section:
