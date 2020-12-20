@@ -47,14 +47,11 @@ class CSVFlightInfoExporter(FlightInfoExporter):
         for k_section in self.flight_info.k_sections:
             utc_time = k_section.raw_section_data[1:7]
 
-            # values = []
             raw_data = k_section.raw_section_data
             for (title, indices) in k_section.flight_data.items():
                 if title not in self.titles:
                     self.titles.append(title)
                 self.flight_data[utc_time].append(raw_data[indices[0]: indices[1]])
-
-            # self.values.append(values)
 
     def export(self, flight_info: FlightInfo, destination_path: str):
         self.flight_info = flight_info
