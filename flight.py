@@ -2,6 +2,26 @@ import datetime
 from typing import Optional, Dict, Tuple, List
 
 
+# K section of IGC file
+class KSection:
+    def __init__(self):
+        self.raw_section_data: str = ''
+        self.flight_data: Dict[str, Tuple[int, int]] = {}  # maps name to tuple(start, end)
+
+    def __str__(self):
+        return ''
+
+
+# J section of IGC file
+class JSection:
+    def __init__(self):
+        self.num_extensions: int = 0
+        self.flight_data: Dict[str, Tuple[int, int]] = {}  # maps name to tuple(start, end)
+
+    def __str__(self):
+        return 'num extensions: ' + str(self.num_extensions) + ', ' + str(self.flight_data)
+
+
 class GPSInfo:
     def __init__(self):
         self.info: str = ''
@@ -132,6 +152,8 @@ class FlightInfo:
         self.timed_flight_data: List[TimedFlightData] = []
         self.comments = Comments()
         self.differential_gps: Optional[DifferentialGPS] = None
+        self.k_sections: List[KSection] = []
+        self.j_section: Optional[JSection] = None
 
     def __str__(self):
         res = ''
@@ -140,4 +162,6 @@ class FlightInfo:
         res += str(self.extension_header) + '\n'
         res += str(self.comments) + '\n'
         res += str(self.differential_gps) + '\n'
+        res += str(self.k_sections) + '\n'
+        res += str(self.j_section) + '\n'
         return res

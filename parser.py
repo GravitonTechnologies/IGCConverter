@@ -1,4 +1,4 @@
-from flight import FlightInfo, TimedFlightData, DifferentialGPS
+from flight import FlightInfo, TimedFlightData, DifferentialGPS, KSection, JSection
 import re
 import datetime
 
@@ -6,6 +6,7 @@ import datetime
 class IGCParser:
     def __init__(self, igc_file_path):
         self.found_extension_header = False
+        self.found_j_section = False
         self.flight_info = FlightInfo()  # Empty flight info
 
         # extract IGC file lines into list
@@ -26,6 +27,42 @@ class IGCParser:
                 self._parse_comment_section(line)
             elif line.startswith('D'):
                 self._parse_differential_gps(line)
+            elif line.startswith('J'):
+                self._parse_j_section(line)
+            elif line.startswith('K'):
+                self._parse_k_section(line)
+
+    def _parse_j_section(self, line):
+        self.found_j_section = True
+        self.flight_info.j_section = JSection()
+
+        line = line.removeprefix('J')
+        num_extensions = int(line[0:2])
+        self.flight_info.j_section.num_extensions = num_extensions
+
+        line = line[2:]  # remove num extensions
+        extensions = re.findall(r'(\d{4}[A-Z]{3})', line)
+        for extension in extensions:
+            extension_parts = re.search(r'(\d{2})(\d{2})([A-Z]{3})', extension)
+            if extension_parts:
+                start_index = int(extension_parts.group(1))
+                end_index = int(extension_parts.group(2))
+                name = extension_parts.group(3)
+                self.flight_info.j_section.flight_data[name] = (start_index, end_index)
+            else:
+                print('unable to get extension parts from {}'.format(line))
+        print('FLIGHT DATA:', self.flight_info.j_section.flight_data)
+
+    def _parse_k_section(self, line):
+        if not self.found_j_section:
+            print('INVALID FILE!!')
+            exit(0)
+
+        k_section = KSection()
+        k_section.raw_section_data = line
+        k_section.flight_data = self.flight_info.j_section.flight_data
+
+        self.flight_info.k_sections.append(k_section)
 
     def _parse_differential_gps(self, line):
         self.flight_info.differential_gps = DifferentialGPS()
