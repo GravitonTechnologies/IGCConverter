@@ -135,6 +135,16 @@ class IGCParser:
             self._parse_tail_fin_number(line)
         elif line.startswith('HFCCL'):
             self._parse_glider_class(line)
+        elif line.startswith('HFTZN'):
+            self._parse_timezone(line)
+
+    def _parse_timezone(self, line):
+        try:
+            self.flight_info.header.time_zone = float(line.split(':')[1])
+        except IndexError:
+            pass
+        except ValueError:
+            pass
 
     def _parse_firmware_version(self, line):
         try:

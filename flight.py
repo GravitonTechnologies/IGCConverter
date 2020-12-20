@@ -85,6 +85,7 @@ class Header:
         self.pressure_sensor_info: PressureSensorInfo = PressureSensorInfo()
         self.tail_fin_number: str = ''
         self.glider_class: str = ''
+        self.time_zone: float = 0.0
 
     def __str__(self):
         res = str(self.flight_date) + '\n'
@@ -103,6 +104,7 @@ class Header:
         res += 'Pressure sensor info: ' + str(self.pressure_sensor_info) + '\n'
         res += 'Glider class: ' + str(self.glider_class) + '\n'
         res += 'tail fin number: ' + str(self.tail_fin_number) + '\n'
+        res += 'timezone: ' + str(self.time_zone) + '\n'
 
         return res
 
