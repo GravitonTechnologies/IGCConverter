@@ -45,6 +45,7 @@ class TimedFlightData:
         self.gps_altitude: str = ''
 
 
+# H section of IGC file
 class Header:
     def __init__(self):
         self.flight_date: datetime.date = datetime.date.today()  # UTC date of flight
@@ -86,6 +87,27 @@ class Header:
         return res
 
 
+# L section of IGC file (for comments)
+class Comments:
+    def __init__(self):
+        self.lines: List[str] = []  # stores raw lines of L section
+
+    def add(self, comment: str):
+        self.lines.append(comment)
+
+    def __str__(self):
+        return str(self.lines)
+
+
+class DifferentialGPS:
+    def __init__(self):
+        self.gps_qualifier: str = ''
+        self.dgps_station_id: str = ''
+
+    def __str__(self):
+        return 'gps qualifier: ' + self.gps_qualifier + ', ' + 'dgps station id: ' + self.dgps_station_id
+
+
 # A section of IGC file
 class FlightRecorderInfo:
     def __init__(self):
@@ -105,13 +127,17 @@ class FlightRecorderInfo:
 class FlightInfo:
     def __init__(self):
         self.header = Header()
-        self.extension_header: ExtensionHeader = ExtensionHeader()
+        self.extension_header = ExtensionHeader()
         self.flight_recorder_info = FlightRecorderInfo()
         self.timed_flight_data: List[TimedFlightData] = []
+        self.comments = Comments()
+        self.differential_gps: Optional[DifferentialGPS] = None
 
     def __str__(self):
         res = ''
         res += str(self.header) + '\n'
         res += str(self.flight_recorder_info) + '\n'
         res += str(self.extension_header) + '\n'
+        res += str(self.comments) + '\n'
+        res += str(self.differential_gps) + '\n'
         return res

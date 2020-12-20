@@ -1,4 +1,4 @@
-from flight import FlightInfo, TimedFlightData
+from flight import FlightInfo, TimedFlightData, DifferentialGPS
 import re
 import datetime
 
@@ -22,6 +22,19 @@ class IGCParser:
                 self._parse_extension_header(line)
             elif line.startswith('B'):
                 self._parse_timed_flight_data(line)
+            elif line.startswith('L'):
+                self._parse_comment_section(line)
+            elif line.startswith('D'):
+                self._parse_differential_gps(line)
+
+    def _parse_differential_gps(self, line):
+        self.flight_info.differential_gps = DifferentialGPS()
+        self.flight_info.differential_gps.gps_qualifier = line[1]
+        if line[1] == '2':
+            self.flight_info.differential_gps.dgps_station_id = line[1:]
+
+    def _parse_comment_section(self, line):
+        self.flight_info.comments.add(line)
 
     def _parse_timed_flight_data(self, line):
         data = TimedFlightData()
