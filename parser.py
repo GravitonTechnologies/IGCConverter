@@ -4,11 +4,11 @@ import datetime
 
 
 class IGCParser:
-    def __init__(self, igc_file_path=''):
+    def __init__(self, igc_file_path=None):
         self.found_extension_header = False
         self.found_j_section = False
         self.flight_info = FlightInfo()  # Empty flight info
-        if len(igc_file_path) > 0:
+        if igc_file_path is not None:
             # extract IGC file lines into list
             self.igc_file_lines = list(open(igc_file_path, 'r').readlines())
             self._parse_igc_lines()
