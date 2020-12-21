@@ -236,7 +236,8 @@ class IGCParser:
         try:
             self.flight_info.flight_recorder_info.daily_flight_number = line.split(':')[1]
         except IndexError:
-            print('unable to parse daily_flight_number in {}'.format(line))
+            self.flight_info.flight_recorder_info.daily_flight_number = line
+            # print('unable to parse daily_flight_number in {}'.format(line))
 
     def _parse_pilot_info(self, line: str):
         self.flight_info.header.is_pilot_in_charge = 'PILOTINCHARGE' in line
