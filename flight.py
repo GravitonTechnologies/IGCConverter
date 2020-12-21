@@ -76,7 +76,7 @@ class Header:
         self.glider_type: str = ''
         self.glider_id: str = ''
         self.gps_datum: str = ''
-        self.gps_datum_num: int = 0
+        self.gps_datum_num: str = 0
 
         self.firmware_version: str = ''
         self.hardware_version: str = ''
