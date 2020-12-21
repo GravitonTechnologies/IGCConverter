@@ -192,11 +192,9 @@ class IGCParser:
             print('unable to get gps datum from {}'.format(line))
 
         try:
-            self.flight_info.header.gps_datum_num = int(line[5:8])
+            self.flight_info.header.gps_datum_num = line[5:8]
         except IndexError:
             print('unable to get gps datum num from {}'.format(line))
-        except ValueError:
-            print('invalid to get gps datum num from {}'.format(line))
 
     def _parse_glider_type(self, line):
         try:
