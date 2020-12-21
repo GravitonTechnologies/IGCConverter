@@ -1,6 +1,7 @@
 from parser import IGCParser
 from exporter_factory import FlightInfoExporterFactory
 import os
+import argparse
 
 
 def get_igc_files(directory: str):
@@ -19,11 +20,23 @@ def make_export_path(in_path: str, export_format: str):
 
 
 def main():
-    csv_file_path = '06ed9wl1.igc'
-    parser = IGCParser(csv_file_path)
-    destination_path = make_export_path(csv_file_path, 'csv')
-    exporter = FlightInfoExporterFactory().create(destination_path)
-    exporter.export(parser.flight_info, destination_path)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--format", default='csv', type=str)
+    parser.add_argument("input", default='csv', type=str)
+    args = parser.parse_args()
+
+    if os.path.isdir(args.input):
+        igc_files = get_igc_files(args.input)
+        for igc_file in igc_files:
+            igc_parser = IGCParser(igc_file)
+            destination_path = make_export_path(igc_file, args.format)
+            exporter = FlightInfoExporterFactory().create(destination_path)
+            exporter.export(igc_parser.flight_info, destination_path)
+    else:
+        igc_parser = IGCParser(args.input)
+        destination_path = make_export_path(args.input, args.format)
+        exporter = FlightInfoExporterFactory().create(destination_path)
+        exporter.export(igc_parser.flight_info, destination_path)
 
 
 if __name__ == '__main__':
