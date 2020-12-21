@@ -15,7 +15,7 @@ class MyTestCase(unittest.TestCase):
         parser = IGCParser()
         parser.flight_info = self.flight_info
         parser._parse_flight_recorder_info('AFLA9WL')
-        self.assertEqual(self.flight_info.flight_recorder_info.flight_recorder_manufacturer_code, 'FLA9WL')
+        self.assertEqual(self.flight_info.flight_recorder_info.flight_recorder_manufacturer_code, 'FLA')
 
 
 if __name__ == '__main__':

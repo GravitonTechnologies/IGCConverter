@@ -224,7 +224,7 @@ class IGCParser:
 
     def _parse_flight_recorder_info(self, line: str):
         try:
-            self.flight_info.flight_recorder_info.flight_recorder_manufacturer_code = line[1:]
+            self.flight_info.flight_recorder_info.flight_recorder_manufacturer_code = line[1:4]
         except IndexError:
             print('unable to parse flight_recorder_manufacturer_code in {}'.format(line))
 
