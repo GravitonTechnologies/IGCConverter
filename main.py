@@ -22,7 +22,7 @@ def make_export_path(in_path: str, export_format: str):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--format", default='csv', type=str)
-    parser.add_argument("input", default='csv', type=str)
+    parser.add_argument("input", type=str)
     args = parser.parse_args()
 
     if os.path.isdir(args.input):
