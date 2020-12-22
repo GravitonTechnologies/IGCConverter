@@ -7,6 +7,7 @@ class IGCParser:
     def __init__(self, igc_file_path=None):
         self.found_extension_header = False
         self.found_j_section = False
+        self.indices_to_extension_header_title = {}  # tuple of indices to title
         self.flight_info = FlightInfo()  # Empty flight info
         if igc_file_path is not None:
             # extract IGC file lines into list
@@ -54,8 +55,7 @@ class IGCParser:
 
     def _parse_k_section(self, line):
         if not self.found_j_section:
-            print('INVALID FILE!!')
-            exit(0)
+            raise RuntimeError("invalid IGC file")
 
         k_section = KSection()
         k_section.raw_section_data = line
@@ -141,9 +141,9 @@ class IGCParser:
         try:
             self.flight_info.header.time_zone = float(line.split(':')[1])
         except IndexError:
-            pass
+            self.flight_info.header.time_zone = float(line.split()[1])
         except ValueError:
-            pass
+            raise RuntimeError('invalid timezone in {}'.format(line))
 
     def _parse_firmware_version(self, line):
         try:
