@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
+from tkinter import messagebox
 from igc_converter import convert_igc
 from parser import ParseError
 import os
@@ -37,10 +38,13 @@ class IGCConverterGUI:
         save_button.pack(side=tk.RIGHT)
 
     def _on_convert_button_clicked(self):
+        if self.selected_igc_path is None:
+            messagebox.showerror('Error', 'No input was selected!')
+            return
         try:
             convert_igc(self.selected_igc_path, self.selected_output_format)
         except ParseError as e:
-            print(e)
+            messagebox.showerror('Parse Error!', e)
 
     def _on_select_input_button_clicked(self):
         self.open_filedialog()
