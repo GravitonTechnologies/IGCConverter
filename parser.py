@@ -4,9 +4,10 @@ import datetime
 
 
 class ParseError(Exception):
-    def __init__(self, message, line_number: int):
-        super(ParseError, self).__init__(message)
+    def __init__(self, message, line_number: int, current_file_path: str):
+        super().__init__(message)
         self.line_number = line_number
+        self.current_file_path = current_file_path
 
 
 class IGCParser:
@@ -14,6 +15,7 @@ class IGCParser:
         self.found_extension_header = False
         self.found_j_section = False
         self.current_line_number = 0
+        self.igc_file_path = igc_file_path
         self.indices_to_extension_header_title = {}  # tuple of indices to title
         self.flight_info = FlightInfo()  # Empty flight info
         if igc_file_path is not None:
@@ -22,7 +24,7 @@ class IGCParser:
             self._parse_igc_lines()
 
     def _raise_parse_error(self, message):
-        raise ParseError(message, self.current_line_number)
+        raise ParseError(message, self.current_line_number, self.igc_file_path)
 
     def _parse_igc_lines(self):
         for line in self.igc_file_lines:
