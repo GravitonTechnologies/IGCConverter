@@ -1,6 +1,7 @@
 from gui import IGCConverterGUI
 import argparse
 from igc_converter import convert_igc
+from parser import ParseError
 
 
 def main():
@@ -14,7 +15,10 @@ def main():
         gui = IGCConverterGUI()
         gui.mainloop()
     else:
-        convert_igc(args.input, args.format)
+        try:
+            convert_igc(args.input, args.format)
+        except ParseError as e:
+            print(e)
 
 
 if __name__ == '__main__':

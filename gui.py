@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog
 from igc_converter import convert_igc
+from parser import ParseError
 import os
 
 
@@ -36,7 +37,10 @@ class IGCConverterGUI:
         save_button.pack(side=tk.RIGHT)
 
     def _on_convert_button_clicked(self):
-        convert_igc(self.selected_igc_path, self.selected_output_format)
+        try:
+            convert_igc(self.selected_igc_path, self.selected_output_format)
+        except ParseError as e:
+            print(e)
 
     def _on_select_input_button_clicked(self):
         self.open_filedialog()

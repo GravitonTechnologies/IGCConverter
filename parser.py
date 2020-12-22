@@ -4,10 +4,14 @@ import datetime
 
 
 class ParseError(Exception):
-    def __init__(self, message, line_number: int, current_file_path: str):
+    def __init__(self, message, line_number: int, igc_file_path: str):
         super().__init__(message)
         self.line_number = line_number
-        self.current_file_path = current_file_path
+        self.igc_file_path = igc_file_path
+        self.message = message
+
+    def __str__(self):
+        return "Parse error: {} in '{}' at line {}.".format(self.message, self.igc_file_path, self.line_number)
 
 
 class IGCParser:
