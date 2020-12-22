@@ -31,7 +31,7 @@ class CSVFlightInfoExporter(FlightInfoExporter):
             # optional values
             if info_data.additional_data is not None:
                 for indices in info_data.additional_data.values():
-                    value = info_data.raw_data[indices[0]:indices[1]]
+                    value = info_data.raw_data[indices[0]:indices[1]+1]
                     values.append(value)
 
             self.values.append(values)

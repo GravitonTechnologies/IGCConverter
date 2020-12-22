@@ -53,9 +53,9 @@ class MyTestCase(unittest.TestCase):
         for info_data in timed_data_list:
             for indices in info_data.additional_data.values():
                 title = indices_to_title[(indices[0], indices[1])]
-                title_to_value[title] = info_data.raw_data[indices[0]:indices[1]]
+                title_to_value[title] = info_data.raw_data[indices[0]:indices[1]+1]
 
-        self.assertEqual(title_to_value['FXA'], '01')
+        self.assertEqual(title_to_value['FXA'], '010')
         self.assertEqual(title_to_value['SIU'], '9')
 
 

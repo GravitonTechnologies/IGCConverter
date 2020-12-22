@@ -16,6 +16,7 @@ class IGCParser:
 
     def _parse_igc_lines(self):
         for line in self.igc_file_lines:
+            line = line.rstrip('\n')
             if line.startswith('H'):
                 self._parse_header(line)
             elif line.startswith('A'):
