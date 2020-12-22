@@ -4,19 +4,25 @@ import datetime
 
 
 class ParseError(Exception):
-    pass
+    def __init__(self, message, line_number: int):
+        super(ParseError, self).__init__(message)
+        self.line_number = line_number
 
 
 class IGCParser:
     def __init__(self, igc_file_path=None):
         self.found_extension_header = False
         self.found_j_section = False
+        self.current_line_number = 0
         self.indices_to_extension_header_title = {}  # tuple of indices to title
         self.flight_info = FlightInfo()  # Empty flight info
         if igc_file_path is not None:
             # extract IGC file lines into list
             self.igc_file_lines = list(open(igc_file_path, 'r').readlines())
             self._parse_igc_lines()
+
+    def _raise_parse_error(self, message):
+        raise ParseError(message, self.current_line_number)
 
     def _parse_igc_lines(self):
         for line in self.igc_file_lines:
@@ -37,6 +43,7 @@ class IGCParser:
                 self._parse_j_section(line)
             elif line.startswith('K'):
                 self._parse_k_section(line)
+            self.current_line_number += 1
 
     def _parse_j_section(self, line):
         self.found_j_section = True
@@ -56,11 +63,11 @@ class IGCParser:
                 name = extension_parts.group(3)
                 self.flight_info.j_section.flight_data[name] = (start_index, end_index)
             else:
-                raise ParseError('unable to get extension parts from {}'.format(line))
+                self._raise_parse_error('unable to get extension parts from {}'.format(line))
 
     def _parse_k_section(self, line):
         if not self.found_j_section:
-            raise ParseError("invalid IGC file")
+            self._raise_parse_error("invalid IGC file")
 
         k_section = KSection()
         k_section.raw_section_data = line
@@ -111,7 +118,7 @@ class IGCParser:
                 self.flight_info.extension_header.flight_data[name] = (start_index, end_index)
 
             else:
-                raise ParseError('Extension Header parse error: {}'.format(line))
+                self._raise_parse_error('Extension Header parse error: {}'.format(line))
 
     def _parse_header(self, line):
         if line.startswith('HFPLT'):
@@ -149,25 +156,25 @@ class IGCParser:
         except IndexError:
             self.flight_info.header.time_zone = float(line.split()[1])
         except ValueError:
-            raise ParseError('invalid timezone in {}'.format(line))
+            self._raise_parse_error('invalid timezone in {}'.format(line))
 
     def _parse_firmware_version(self, line):
         try:
             self.flight_info.header.firmware_version = line.split(':')[1]
         except IndexError:
-            raise ParseError('Parse Error: firmware version from {}'.format(line))
+            self._raise_parse_error('Parse Error: firmware version from {}'.format(line))
 
     def _parse_hardware_version(self, line):
         try:
             self.flight_info.header.hardware_version = line.split(':')[1]
         except IndexError:
-            raise ParseError('unable to get hardware version from {}'.format(line))
+            self._raise_parse_error('unable to get hardware version from {}'.format(line))
 
     def _parse_flight_recorder_type(self, line):
         try:
             self.flight_info.header.flight_recorder_type = line.split(':')[1]
         except IndexError:
-            raise ParseError('unable to get flight_recorder_type from {}'.format(line))
+            self._raise_parse_error('unable to get flight_recorder_type from {}'.format(line))
 
     def _parse_gps_info(self, line):
         info = line.removeprefix('HFGPS').removeprefix('RECEIVER:')
@@ -195,12 +202,12 @@ class IGCParser:
         try:
             self.flight_info.header.gps_datum = line.split(':')[1]
         except IndexError:
-            raise ParseError('unable to get gps datum from {}'.format(line))
+            self._raise_parse_error('unable to get gps datum from {}'.format(line))
 
         try:
             self.flight_info.header.gps_datum_num = line[5:8]
         except IndexError:
-            raise ParseError('unable to get gps datum num from {}'.format(line))
+            self._raise_parse_error('unable to get gps datum num from {}'.format(line))
 
     def _parse_glider_type(self, line):
         try:
@@ -232,18 +239,18 @@ class IGCParser:
         try:
             self.flight_info.flight_recorder_info.flight_recorder_manufacturer_code = line[1:4]
         except IndexError:
-            raise ParseError('unable to parse flight_recorder_manufacturer_code in {}'.format(line))
+            self._raise_parse_error('unable to parse flight_recorder_manufacturer_code in {}'.format(line))
 
         try:
             self.flight_info.flight_recorder_info.flight_recorder_serial_number = line[4:7]
         except IndexError:
-            raise ParseError('unable to parse flight_recorder_serial_number in {}'.format(line))
+            self._raise_parse_error('unable to parse flight_recorder_serial_number in {}'.format(line))
 
         try:
             self.flight_info.flight_recorder_info.daily_flight_number = line.split(':')[1]
         except IndexError:
             self.flight_info.flight_recorder_info.daily_flight_number = line
-            # raise ParseError('unable to parse daily_flight_number in {}'.format(line))
+            # self._raise_parse_error('unable to parse daily_flight_number in {}'.format(line))
 
     def _parse_pilot_info(self, line: str):
         self.flight_info.header.is_pilot_in_charge = 'PILOTINCHARGE' in line
