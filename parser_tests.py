@@ -30,7 +30,7 @@ class MyTestCase(unittest.TestCase):
         timed_data_list = self.flight_info.timed_flight_data
         self.assertEqual(len(timed_data_list), 1)
         timed_data = timed_data_list[0]
-        self.assertIsNone(timed_data.additional_data)
+        self.assertIsNone(timed_data.extensions)
         self.assertEqual(timed_data.utc_time, '151109')
         self.assertEqual(timed_data.latitude, '4538002N')
         self.assertEqual(timed_data.longitude, '07249279W')
@@ -48,10 +48,10 @@ class MyTestCase(unittest.TestCase):
         timed_data_list = self.flight_info.timed_flight_data
         self.assertEqual(len(timed_data_list), 1)
         timed_data = timed_data_list[0]
-        self.assertIsNotNone(timed_data.additional_data)
+        self.assertIsNotNone(timed_data.extensions)
 
         for info_data in timed_data_list:
-            for indices in info_data.additional_data.values():
+            for indices in info_data.extensions.values():
                 title = indices_to_title[(indices[0], indices[1])]
                 title_to_value[title] = info_data.raw_data[indices[0]:indices[1]+1]
 

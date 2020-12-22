@@ -85,7 +85,7 @@ class IGCParser:
         data.gps_altitude = line[30:35]
 
         if self.found_extension_header:
-            data.additional_data = self.flight_info.extension_header.flight_data
+            data.extensions = self.flight_info.extension_header.flight_data
 
         self.flight_info.timed_flight_data.append(data)
 

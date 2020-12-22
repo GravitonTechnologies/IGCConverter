@@ -56,7 +56,8 @@ class ExtensionHeader:
 class TimedFlightData:
     def __init__(self):
         self.raw_data: str = ''  # used to extract additional data values
-        self.additional_data: Optional[Dict[str, Tuple[int, int]]] = None
+
+        self.extensions: Optional[Dict[str, Tuple[int, int]]] = None  # Information from I section
         self.utc_time: str = ''
         self.latitude: str = ''
         self.longitude: str = ''
