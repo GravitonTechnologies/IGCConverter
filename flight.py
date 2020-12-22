@@ -119,7 +119,7 @@ class Comments:
         self.lines.append(comment)
 
     def __str__(self):
-        return str(self.lines)
+        return ''.join(self.lines)
 
 
 class DifferentialGPS:

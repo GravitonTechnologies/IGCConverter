@@ -71,6 +71,7 @@ class IGCParser:
             self.flight_info.differential_gps.dgps_station_id = line[1:]
 
     def _parse_comment_section(self, line):
+        line = line.removeprefix('L')
         self.flight_info.comments.add(line)
 
     def _parse_timed_flight_data(self, line):
