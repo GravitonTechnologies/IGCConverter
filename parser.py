@@ -31,6 +31,7 @@ class IGCParser:
         raise ParseError(message, self.current_line_number, self.igc_file_path)
 
     def _parse_igc_lines(self):
+        self.current_line_number = 1
         for line in self.igc_file_lines:
             line = line.rstrip('\n')
             if line.startswith('H'):
@@ -56,7 +57,13 @@ class IGCParser:
         self.flight_info.j_section = JSection()
 
         line = line.removeprefix('J')
-        num_extensions = int(line[0:2])
+        num_extensions = -1
+        try:
+            num_extensions = int(line[0:2])
+        except ValueError:
+            self._raise_parse_error('unable to get extension parts from {}'.format(line))
+
+        assert num_extensions >= 0
         self.flight_info.j_section.num_extensions = num_extensions
 
         line = line[2:]  # remove num extensions
