@@ -16,9 +16,6 @@ def main():
         gui.mainloop()
     else:
         try:
-            if args.input is None:
-                print(parser.print_help())
-                return
             convert_igc(args.input, args.format)
         except ParseError as e:
             print(e)
