@@ -45,6 +45,8 @@ class IGCConverterGUI:
             convert_igc(self.selected_igc_path, self.selected_output_format)
         except ParseError as e:
             messagebox.showerror('Parse Error!', e)
+        except RuntimeError as e:
+            messagebox.showerror('Runtime Error!', e)
 
     def _on_select_input_button_clicked(self):
         self.open_filedialog()

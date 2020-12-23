@@ -7,7 +7,7 @@ from parser import ParseError
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--format", default='csv', type=str, help='output format')
-    parser.add_argument("input", type=str, help='IGC source')
+    parser.add_argument("--input", type=str, help='IGC source', default='.')
     parser.add_argument('--gui', action='store_true', help='start in GUI mode')
     args = parser.parse_args()
 
@@ -16,8 +16,13 @@ def main():
         gui.mainloop()
     else:
         try:
+            if args.input is None:
+                print(parser.print_help())
+                return
             convert_igc(args.input, args.format)
         except ParseError as e:
+            print(e)
+        except RuntimeError as e:
             print(e)
 
 

@@ -21,6 +21,9 @@ def make_export_path(in_path: str, export_format: str):
 def convert_igc(igc_input: str, output_format):
     if os.path.isdir(igc_input):
         igc_files = get_igc_files(igc_input)
+        if len(igc_files) == 0:
+            raise RuntimeError("No IGC files found in directory '{}'".format(igc_input))
+
         for igc_file in igc_files:
             igc_parser = IGCParser(igc_file)
             destination_path = make_export_path(igc_file, output_format)
