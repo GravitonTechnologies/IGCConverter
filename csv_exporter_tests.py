@@ -1,5 +1,5 @@
 import unittest
-from parser import IGCParser
+from igcparser import IGCParser
 from csv_exporter import CSVFlightInfoExporter
 import csv
 

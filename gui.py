@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
 from igc_converter import convert_igc
-from parser import ParseError
+from igcparser import ParseError
 import os
 
 

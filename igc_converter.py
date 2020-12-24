@@ -1,5 +1,5 @@
 import os
-from parser import IGCParser
+from igcparser import IGCParser
 from exporter_factory import FlightInfoExporterFactory
 
 

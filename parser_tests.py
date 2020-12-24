@@ -1,6 +1,6 @@
 import unittest
 from flight import FlightInfo
-from parser import IGCParser, ParseError
+from igcparser import IGCParser, ParseError
 
 
 class ParserTests(unittest.TestCase):

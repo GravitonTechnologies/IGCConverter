@@ -1,7 +1,7 @@
 from gui import IGCConverterGUI
 import argparse
 from igc_converter import convert_igc
-from parser import ParseError
+from igcparser import ParseError
 
 
 def main():
