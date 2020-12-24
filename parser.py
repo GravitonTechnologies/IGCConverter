@@ -250,8 +250,8 @@ class IGCParser:
         if date_search:
             str_day = date_search.group(1)
             str_month = date_search.group(2)
-            str_year = date_search.group(3)  # todo: maybe append '19' or '20' to year
-            self.flight_info.header.flight_date = datetime.date(int(str_year), int(str_month), int(str_day))
+            str_year = date_search.group(3)
+            self.flight_info.header.flight_date = (str_year, str_month, str_day)
 
     def _parse_flight_recorder_info(self, line: str):
         try:
