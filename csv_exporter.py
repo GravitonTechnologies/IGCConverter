@@ -54,6 +54,13 @@ class CSVFlightInfoExporter(FlightInfoExporter):
 
     def _export_header(self):
         self.writer.writerow(["Flight Date", "{}-{}-{}".format(*self.flight_info.header.flight_date)])
+        self.writer.writerow(["Pilot name", self.flight_info.header.pilot_name])
+        self.writer.writerow(["Second pilot name", self.flight_info.header.second_pilot_name])
+        self.writer.writerow(["Glider Type", self.flight_info.header.glider_type])
+        self.writer.writerow(["Glider ID", self.flight_info.header.glider_id])
+        self.writer.writerow(["Tail Fin Number", self.flight_info.header.tail_fin_number])
+        self.writer.writerow(["Timezone", self.flight_info.header.time_zone])
+        self.writer.writerow(["Glider class", self.flight_info.header.glider_class])
 
     def export(self, flight_info: FlightInfo, destination_path: str):
         self.flight_info = flight_info
