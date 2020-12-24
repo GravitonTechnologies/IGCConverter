@@ -52,10 +52,14 @@ class CSVFlightInfoExporter(FlightInfoExporter):
                     self.titles.append(title)
                 self.flight_data[utc_time].append(value)
 
+    def _export_header(self):
+        self.writer.writerow(["Flight Date", "{}-{}-{}".format(*self.flight_info.header.flight_date)])
+
     def export(self, flight_info: FlightInfo, destination_path: str):
         self.flight_info = flight_info
         with open(destination_path, 'w', newline='') as csvfile:
             self.writer = csv.writer(csvfile)
+            self._export_header()
             self._add_additional_titles()
             self._export_flight_data()
             self._export_j_and_k_sections()
