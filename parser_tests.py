@@ -64,13 +64,22 @@ class ParserTests(unittest.TestCase):
         self.assertEqual(self.flight_info.timed_flight_data[0].extension_values['OAT'], '0209')
         self.assertEqual(self.flight_info.timed_flight_data[0].extension_values['ACZ'], '0098')
 
-    def test_j_and_k_sections(self):
+    def test_j_and_k_sections_1(self):
         self.parser._parse_j_section('J010810HDT')
         self.parser._parse_k_section('K160310090')
 
         self.assertEqual(self.flight_info.j_section.num_extensions, 1)
         self.assertEqual(self.flight_info.k_sections[0].flight_data_values['HDT'], '090')
         self.assertEqual(self.flight_info.k_sections[0].utc_timestamp, '160310')
+
+    def test_j_and_k_sections_2(self):
+        self.parser._parse_j_section('J020810WDI1115WVE')
+        self.parser._parse_k_section('K08570707200057')
+
+        self.assertEqual(self.flight_info.j_section.num_extensions, 2)
+        self.assertEqual(self.flight_info.k_sections[0].flight_data_values['WVE'], '00057')
+        self.assertEqual(self.flight_info.k_sections[0].flight_data_values['WDI'], '072')
+        self.assertEqual(self.flight_info.k_sections[0].utc_timestamp, '085707')
 
     def test_parse_k_section_without_j_section(self):
         self.assertRaises(ParseError, self.parser._parse_k_section, 'KTHISISATESTKSECTION')

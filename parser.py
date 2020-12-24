@@ -87,7 +87,7 @@ class IGCParser:
 
         k_section.utc_timestamp = line[1:7]
         for (title, indices) in self.flight_info.j_section.flight_data_indices.items():
-            k_section.flight_data_values[title] = line[indices[0] - 1:indices[1]]
+            k_section.flight_data_values[title] = line[indices[0] - 1:indices[1] - 1]
 
         self.flight_info.k_sections.append(k_section)
 
