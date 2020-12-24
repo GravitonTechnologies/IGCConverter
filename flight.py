@@ -5,21 +5,21 @@ from typing import Optional, Dict, Tuple, List
 # K section of IGC file (infrequent timed data)
 class KSection:
     def __init__(self):
-        self.raw_section_data: str = ''
-        self.flight_data: Dict[str, Tuple[int, int]] = {}  # maps name to tuple(start, end)
+        self.utc_timestamp: str = ''
+        self.flight_data_values: Dict[str, str] = {}  # maps title name to str value
 
     def __str__(self):
-        return ''
+        return str(self.flight_data_values)
 
 
 # J section of IGC file
 class JSection:
     def __init__(self):
         self.num_extensions: int = 0
-        self.flight_data: Dict[str, Tuple[int, int]] = {}  # maps name to tuple(start, end)
+        self.flight_data_indices: Dict[str, Tuple[int, int]] = {}  # maps name to tuple(start, end)
 
     def __str__(self):
-        return 'num extensions: ' + str(self.num_extensions) + ', ' + str(self.flight_data)
+        return 'num extensions: ' + str(self.num_extensions) + ', ' + str(self.flight_data_indices)
 
 
 class GPSInfo:

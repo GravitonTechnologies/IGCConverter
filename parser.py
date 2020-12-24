@@ -75,7 +75,7 @@ class IGCParser:
                     extension_parts.group(1))  # compensate for offset in IGC standard relative to python
                 end_index = int(extension_parts.group(2)) + 1
                 name = extension_parts.group(3)
-                self.flight_info.j_section.flight_data[name] = (start_index, end_index)
+                self.flight_info.j_section.flight_data_indices[name] = (start_index, end_index)
             else:
                 self._raise_parse_error('unable to get extension parts from {}'.format(line))
 
@@ -84,8 +84,10 @@ class IGCParser:
             self._raise_parse_error("invalid IGC file")
 
         k_section = KSection()
-        k_section.raw_section_data = line
-        k_section.flight_data = self.flight_info.j_section.flight_data
+
+        k_section.utc_timestamp = line[1:7]
+        for (title, indices) in self.flight_info.j_section.flight_data_indices.items():
+            k_section.flight_data_values[title] = line[indices[0] - 1:indices[1]]
 
         self.flight_info.k_sections.append(k_section)
 
