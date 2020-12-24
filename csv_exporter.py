@@ -11,15 +11,15 @@ class CSVFlightInfoExporter(FlightInfoExporter):
         self.values = []
         self.writer = None
 
-    def _export_flight_data(self):
-        # Add titles to table
+    def _add_additional_titles(self):
+        # add additional titles from I record
         for timed_flight_data in self.flight_info.timed_flight_data:
-            if timed_flight_data.extension_values is not None:
-                for title in timed_flight_data.extension_values.keys():
-                    if title not in self.titles:
-                        self.titles.append(title)
+            additional_titles = timed_flight_data.extension_values.keys()
+            for t in additional_titles:
+                if t not in self.titles:
+                    self.titles.append(t)
 
-        # TODO: Make sure value is always aligned with table title
+    def _export_flight_data(self):
         # Add values to table
         for timed_flight_data in self.flight_info.timed_flight_data:
             # standard values
@@ -31,8 +31,9 @@ class CSVFlightInfoExporter(FlightInfoExporter):
 
             # optional values
             if timed_flight_data.extension_values is not None:
-                for (_, value) in timed_flight_data.extension_values.items():
-                    values.append(value)
+                for (title, value) in timed_flight_data.extension_values.items():
+                    index = self.titles.index(title)
+                    values.insert(index, value)
 
             self.values.append(values)
 
@@ -42,21 +43,20 @@ class CSVFlightInfoExporter(FlightInfoExporter):
 
         # TODO: Make sure value is always aligned with table title
         # Add values to table
-        indices = self.flight_info.j_section.flight_data.values()
 
         for k_section in self.flight_info.k_sections:
-            utc_time = k_section.raw_section_data[1:7]
+            utc_time = k_section.utc_timestamp
 
-            raw_data = k_section.raw_section_data
-            for (title, indices) in k_section.flight_data.items():
+            for (title, value) in k_section.flight_data_values.items():
                 if title not in self.titles:
                     self.titles.append(title)
-                self.flight_data[utc_time].append(raw_data[indices[0]: indices[1]])
+                self.flight_data[utc_time].append(value)
 
     def export(self, flight_info: FlightInfo, destination_path: str):
         self.flight_info = flight_info
         with open(destination_path, 'w', newline='') as csvfile:
             self.writer = csv.writer(csvfile)
+            self._add_additional_titles()
             self._export_flight_data()
             self._export_j_and_k_sections()
 

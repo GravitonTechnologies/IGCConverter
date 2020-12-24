@@ -3,7 +3,7 @@ from flight import FlightInfo
 from parser import IGCParser, ParseError
 
 
-class MyTestCase(unittest.TestCase):
+class ParserTests(unittest.TestCase):
 
     def setUp(self) -> None:
         self.flight_info = FlightInfo()
