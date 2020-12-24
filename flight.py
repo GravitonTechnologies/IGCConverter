@@ -2,7 +2,7 @@ import datetime
 from typing import Optional, Dict, Tuple, List
 
 
-# K section of IGC file
+# K section of IGC file (infrequent timed data)
 class KSection:
     def __init__(self):
         self.raw_section_data: str = ''
@@ -38,26 +38,21 @@ class PressureSensorInfo:
         return self.info
 
 
-# I section of IGC file
+# I section of IGC file (defines what is appended to the timed data on B lines)
 class ExtensionHeader:
     def __init__(self):
         self.num_extensions: int = 0
-        self.flight_data: Dict[str, Tuple[int, int]] = {}  # maps name to tuple(start, end)
+        self.extended_data_indices: Dict[str, Tuple[int, int]] = {}  # maps name to tuple(start, end)
 
     def __str__(self):
         res = 'num_extensions: ' + str(self.num_extensions) + '\n'
-        res += 'flight data: ' + '\n'
-        for (name, indices) in self.flight_data.items():
-            res += ' ' + name + ' ' + str(indices[0]) + ',' + str(indices[1]) + '\n'
         return res
 
 
 # B section of IGC file
 class TimedFlightData:
     def __init__(self):
-        self.raw_data: str = ''  # used to extract additional data values
-
-        self.extensions: Optional[Dict[str, Tuple[int, int]]] = None  # Information from I section
+        self.extension_values: Optional[Dict[str, str]] = None  # Information from I section
         self.utc_time: str = ''
         self.latitude: str = ''
         self.longitude: str = ''
@@ -110,7 +105,7 @@ class Header:
         return res
 
 
-# L section of IGC file (for comments)
+# L section of IGC file (for 'Logbook' comments)
 class Comments:
     def __init__(self):
         self.lines: List[str] = []  # stores raw lines of L section
@@ -122,6 +117,7 @@ class Comments:
         return ''.join(self.lines)
 
 
+# D section of IGC file
 class DifferentialGPS:
     def __init__(self):
         self.gps_qualifier: str = ''

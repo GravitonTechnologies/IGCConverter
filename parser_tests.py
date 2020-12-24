@@ -42,21 +42,11 @@ class MyTestCase(unittest.TestCase):
         self.parser._parse_extension_header('I023638FXA3940SIU')
         self.parser._parse_timed_flight_data('B1511094538002N07249279WA-00940004000109')
 
-        indices_to_title = {(36, 38): 'FXA', (39, 40): 'SIU'}
-        title_to_value = {}  # string to string
+        self.assertEqual(len(self.flight_info.timed_flight_data), 1)
+        self.assertIsNotNone(self.flight_info.timed_flight_data[0].extension_values)
 
-        timed_data_list = self.flight_info.timed_flight_data
-        self.assertEqual(len(timed_data_list), 1)
-        timed_data = timed_data_list[0]
-        self.assertIsNotNone(timed_data.extensions)
-
-        for info_data in timed_data_list:
-            for indices in info_data.extensions.values():
-                title = indices_to_title[(indices[0], indices[1])]
-                title_to_value[title] = info_data.raw_data[indices[0]:indices[1]+1]
-
-        self.assertEqual(title_to_value['FXA'], '010')
-        self.assertEqual(title_to_value['SIU'], '9')
+        self.assertEqual(self.flight_info.timed_flight_data[0].extension_values['FXA'], '001')
+        self.assertEqual(self.flight_info.timed_flight_data[0].extension_values['SIU'], '09')
 
 
 if __name__ == '__main__':

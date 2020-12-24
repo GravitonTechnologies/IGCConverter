@@ -71,8 +71,9 @@ class IGCParser:
         for extension in extensions:
             extension_parts = re.search(r'(\d{2})(\d{2})([A-Z]{3})', extension)
             if extension_parts:
-                start_index = int(extension_parts.group(1))
-                end_index = int(extension_parts.group(2))
+                start_index = int(
+                    extension_parts.group(1))  # compensate for offset in IGC standard relative to python
+                end_index = int(extension_parts.group(2)) + 1
                 name = extension_parts.group(3)
                 self.flight_info.j_section.flight_data[name] = (start_index, end_index)
             else:
@@ -110,7 +111,9 @@ class IGCParser:
         data.gps_altitude = line[30:35]
 
         if self.found_extension_header:
-            data.extensions = self.flight_info.extension_header.flight_data
+            data.extension_values = {}
+            for (title, indices) in self.flight_info.extension_header.extended_data_indices.items():
+                data.extension_values[title] = line[indices[0] - 1:indices[1]]
 
         self.flight_info.timed_flight_data.append(data)
 
@@ -128,7 +131,7 @@ class IGCParser:
                 start_index = int(extension_parts.group(1))
                 end_index = int(extension_parts.group(2))
                 name = extension_parts.group(3)
-                self.flight_info.extension_header.flight_data[name] = (start_index, end_index)
+                self.flight_info.extension_header.extended_data_indices[name] = (start_index, end_index)
 
             else:
                 self._raise_parse_error('Extension Header parse error: {}'.format(line))

@@ -14,8 +14,8 @@ class CSVFlightInfoExporter(FlightInfoExporter):
     def _export_flight_data(self):
         # Add titles to table
         for timed_flight_data in self.flight_info.timed_flight_data:
-            if timed_flight_data.extensions is not None:
-                for title in timed_flight_data.extensions.keys():
+            if timed_flight_data.extension_values is not None:
+                for title in timed_flight_data.extension_values.keys():
                     if title not in self.titles:
                         self.titles.append(title)
 
@@ -30,9 +30,8 @@ class CSVFlightInfoExporter(FlightInfoExporter):
             self.flight_data[timed_flight_data.utc_time] = values
 
             # optional values
-            if timed_flight_data.extensions is not None:
-                for (title, indices) in timed_flight_data.extensions.items():
-                    value = timed_flight_data.raw_data[indices[0]:indices[1] + 1]
+            if timed_flight_data.extension_values is not None:
+                for (_, value) in timed_flight_data.extension_values.items():
                     values.append(value)
 
             self.values.append(values)
