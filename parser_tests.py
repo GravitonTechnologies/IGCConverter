@@ -17,6 +17,7 @@ class MyTestCase(unittest.TestCase):
     def test_parse_flight_recorder_info(self):
         self.parser._parse_flight_recorder_info('AFLA9WL')
         self.assertEqual(self.flight_info.flight_recorder_info.flight_recorder_manufacturer_code, 'FLA')
+        self.assertEqual(self.flight_info.flight_recorder_info.flight_recorder_serial_number, '9WL')
 
     def test_extension_header(self):
         self.parser._parse_extension_header('I023638FXA3940SIU')
@@ -62,6 +63,9 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(self.flight_info.timed_flight_data[0].extension_values['VAT'], '00348')
         self.assertEqual(self.flight_info.timed_flight_data[0].extension_values['OAT'], '0209')
         self.assertEqual(self.flight_info.timed_flight_data[0].extension_values['ACZ'], '0098')
+
+
+
 
 
 if __name__ == '__main__':
