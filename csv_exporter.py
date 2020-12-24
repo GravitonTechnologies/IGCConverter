@@ -67,6 +67,7 @@ class CSVFlightInfoExporter(FlightInfoExporter):
         with open(destination_path, 'w', newline='') as csvfile:
             self.writer = csv.writer(csvfile)
             self._export_header()
+            self.writer.writerow([])  # new line
             self._add_additional_titles()
             self._export_flight_data()
             self._export_j_and_k_sections()
