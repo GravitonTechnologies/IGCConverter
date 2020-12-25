@@ -7,7 +7,7 @@ def get_igc_files(directory: str):
     igc_files = []
     for filename in os.listdir(directory):
         if filename.endswith(".igc"):
-            igc_files.append(filename)
+            igc_files.append(directory + os.sep + filename)
     return igc_files
 
 
