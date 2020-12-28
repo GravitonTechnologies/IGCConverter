@@ -2,18 +2,19 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
 from tkinter.ttk import Progressbar
-from igc_converter import IGCConverter
+from igc_converter import IGCConverter, ConversionProgressObserver
 from igcparser import ParseError
 import os
 
 
-class IGCConverterGUI:
+class IGCConverterGUI(ConversionProgressObserver):
     SupportedFormats = ['csv', 'json']
 
     def __init__(self):
         self.app = tk.Tk()
         self.app.geometry('500x50')
         self.selected_igc_path = None
+        self._num_converted_files = 0
         self._setup_dropdown()
         self._setup_buttons()
         self._setup_progressbar()
@@ -47,8 +48,10 @@ class IGCConverterGUI:
         if self.selected_igc_path is None:
             messagebox.showerror('Error', 'No input was selected!')
             return
+        converter = IGCConverter(self.selected_igc_path, self.selected_output_format)
+        converter.add_observer(self)
         try:
-            IGCConverter(self.selected_igc_path, self.selected_output_format)
+            converter.convert_igc()
         except ParseError as e:
             messagebox.showerror('Parse Error!', e)
         except RuntimeError as e:
@@ -62,3 +65,14 @@ class IGCConverterGUI:
 
     def open_filedialog(self):
         self.selected_igc_path = filedialog.askdirectory(initialdir=os.getcwd(), title="Select a directory")
+
+    def on_conversion_started(self, num_items: int):
+        self.progressbar["maximum"] = num_items
+        self.progressbar["value"] = 0
+
+    def on_conversion_completed(self):
+        messagebox.showinfo('Conversion Complete!', "Converted {} IGC files".format(self.progressbar["maximum"]))
+
+    def on_file_converted(self):
+        self._num_converted_files += 1
+        self.progressbar["value"] = self._num_converted_files
