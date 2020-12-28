@@ -2,6 +2,12 @@ import datetime
 from typing import Optional, Dict, Tuple, List
 
 
+# G section of IGC file
+class SecuritySection:
+    def __init__(self):
+        self.security_key: str = ''
+
+
 # K section of IGC file (infrequent timed data)
 class KSection:
     def __init__(self):
@@ -153,6 +159,7 @@ class FlightInfo:
         self.differential_gps: Optional[DifferentialGPS] = None
         self.k_sections: List[KSection] = []
         self.j_section: Optional[JSection] = None
+        self.security = SecuritySection()
 
     def __str__(self):
         res = ''

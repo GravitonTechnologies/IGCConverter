@@ -50,7 +50,12 @@ class IGCParser:
                 self._parse_j_section(line)
             elif line.startswith('K'):
                 self._parse_k_section(line)
+            elif line.startswith('G'):
+                self._parse_security(line)
             self.current_line_number += 1
+
+    def _parse_security(self, line):
+        self.flight_info.security.security_key = line.removeprefix('G')
 
     def _parse_j_section(self, line):
         self.found_j_section = True
