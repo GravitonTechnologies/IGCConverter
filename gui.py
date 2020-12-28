@@ -72,6 +72,7 @@ class IGCConverterGUI(ConversionProgressObserver):
 
     def on_conversion_completed(self):
         messagebox.showinfo('Conversion Complete!', "Converted {} IGC files".format(self.progressbar["maximum"]))
+        self._num_converted_files = 0
 
     def on_file_converted(self):
         self._num_converted_files += 1
