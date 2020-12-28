@@ -5,6 +5,7 @@ from tkinter.ttk import Progressbar
 from igc_converter import IGCConverter, ConversionProgressObserver
 from igcparser import ParseError
 import os
+from threading import Thread
 
 
 class IGCConverterGUI(ConversionProgressObserver):
@@ -51,7 +52,9 @@ class IGCConverterGUI(ConversionProgressObserver):
         converter = IGCConverter(self.selected_igc_path, self.selected_output_format)
         converter.add_observer(self)
         try:
-            converter.convert_igc()
+            t = Thread(target=converter.convert_igc)
+            t.daemon = True
+            t.start()
         except ParseError as e:
             messagebox.showerror('Parse Error!', e)
         except RuntimeError as e:
@@ -71,7 +74,7 @@ class IGCConverterGUI(ConversionProgressObserver):
         self.progressbar["value"] = 0
 
     def on_conversion_completed(self):
-        messagebox.showinfo('Conversion Complete!', "Converted {} IGC files".format(self.progressbar["maximum"]))
+        messagebox.showinfo('Conversion Complete!', "Converted {} IGC files".format(self._num_converted_files))
         self._num_converted_files = 0
 
     def on_file_converted(self):
