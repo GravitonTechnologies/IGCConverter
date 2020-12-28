@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
+from tkinter.ttk import Progressbar
 from igc_converter import IGCConverter
 from igcparser import ParseError
 import os
@@ -15,10 +16,15 @@ class IGCConverterGUI:
         self.selected_igc_path = None
         self._setup_dropdown()
         self._setup_buttons()
+        self._setup_progressbar()
         self.selected_output_format = self._output_format_dropdown.get()
 
     def mainloop(self):
         self.app.mainloop()
+
+    def _setup_progressbar(self):
+        self.progressbar = Progressbar(self.app)
+        self.progressbar.pack()
 
     def _setup_dropdown(self):
         self._output_format_dropdown = tk.StringVar(self.app)
