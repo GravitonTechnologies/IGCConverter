@@ -18,19 +18,26 @@ def make_export_path(in_path: str, export_format: str):
     return os.path.splitext(in_path)[0] + export_format
 
 
-def convert_igc(igc_input: str, output_format):
-    if os.path.isdir(igc_input):
-        igc_files = get_igc_files(igc_input)
-        if len(igc_files) == 0:
-            raise RuntimeError("No IGC files found in directory '{}'".format(igc_input))
+class IGCConverter:
+    def __init__(self, igc_input: str, output_format):
+        self.igc_input = igc_input
+        self.output_format = output_format
+        self._convert_igc()
 
-        for igc_file in igc_files:
-            igc_parser = IGCParser(igc_file)
-            destination_path = make_export_path(igc_file, output_format)
-            exporter = FlightInfoExporterFactory().create(destination_path)
-            exporter.export(igc_parser.flight_info, destination_path)
-    else:
-        igc_parser = IGCParser(igc_input)
-        destination_path = make_export_path(igc_input, output_format)
+    def _convert_igc(self):
+        if os.path.isdir(self.igc_input):
+            igc_files = get_igc_files(self.igc_input)
+            if len(igc_files) == 0:
+                raise RuntimeError("No IGC files found in directory '{}'".format(self.igc_input))
+
+            for igc_file in igc_files:
+                self._do_conversion(igc_file)
+
+        else:
+            self._do_conversion(self.igc_input)
+
+    def _do_conversion(self, igc_file_path: str):
+        igc_parser = IGCParser(igc_file_path)
+        destination_path = make_export_path(igc_file_path, self.output_format)
         exporter = FlightInfoExporterFactory().create(destination_path)
         exporter.export(igc_parser.flight_info, destination_path)
