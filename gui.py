@@ -4,12 +4,13 @@ from tkinter import messagebox
 from tkinter.ttk import Progressbar
 from igc_converter import IGCConverter, ConversionProgressObserver
 from igcparser import ParseError
+from typing import Optional
 import os
 from threading import Thread
 
 
 class IGCConverterGUI(ConversionProgressObserver):
-    SupportedFormats = ['csv', 'json']
+    SupportedFormats = ['csv', 'acmi-TacView']
 
     def __init__(self):
         self.app = tk.Tk()
@@ -19,7 +20,15 @@ class IGCConverterGUI(ConversionProgressObserver):
         self._setup_dropdown()
         self._setup_buttons()
         self._setup_progressbar()
-        self.selected_output_format = self._output_format_dropdown.get()
+        self.selected_output_format = self._get_selected_export_format()
+
+    def _get_selected_export_format(self) -> Optional[str]:
+        if self._output_format_dropdown.get() == 'acmi-TacView':
+            return 'acmi'
+        elif self._output_format_dropdown.get() == 'csv':
+            return 'csv'
+        else:
+            return None
 
     def mainloop(self):
         self.app.mainloop()
@@ -64,7 +73,7 @@ class IGCConverterGUI(ConversionProgressObserver):
         self.open_filedialog()
 
     def _on_format_chosen(self, arg=None):
-        self.selected_output_format = self._output_format_dropdown.get()
+        self.selected_output_format = self._get_selected_export_format()
 
     def open_filedialog(self):
         self.selected_igc_path = filedialog.askdirectory(initialdir=os.getcwd(), title="Select a directory")
