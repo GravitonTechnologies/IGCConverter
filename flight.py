@@ -70,7 +70,7 @@ class TimedFlightData:
 # H section of IGC file
 class Header:
     def __init__(self):
-        self.flight_date: datetime.date = datetime.date.today()  # UTC date of flight
+        self.flight_date: tuple = (0, 0, 0)  # YEAR, MONTH, DAY
         self.fix_accuracy: int = 0
         self.is_pilot_in_charge: bool = False
         self.pilot_name: str = ''
