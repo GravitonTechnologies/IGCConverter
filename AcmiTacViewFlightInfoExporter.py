@@ -87,7 +87,10 @@ class AcmiTacViewFlightInfoExporter(FlightInfoExporter):
             additional_info = '|'.join([self._transform_longitude_format(timed_data.longitude),
                                         self._transform_latitude_format(timed_data.latitude), timed_data.gps_altitude])
             for (name, value) in timed_data.extension_values.items():
-                additional_info += ',' + name + '=' + value
+                if name == 'TAS':
+                    additional_info += ',' + name + '=' + str(int(value) / 100)
+                else:
+                    additional_info += ',' + name + '=' + value
 
             additional_info += ",Name=" + self.flight_info.header.glider_id
 
