@@ -88,7 +88,7 @@ class AcmiTacViewFlightInfoExporter(FlightInfoExporter):
                                         self._transform_latitude_format(timed_data.latitude), timed_data.gps_altitude])
             for (name, value) in timed_data.extension_values.items():
                 if name == 'TAS':
-                    # convert value to Km/h
+                    # convert value to km/h
                     additional_info += ',' + name + '=' + str(int(value) / 100)
                 else:
                     additional_info += ',' + name + '=' + value
