@@ -11,7 +11,7 @@ class AcmiTacViewFlightInfoExporter(FlightInfoExporter):
         self.flight_info: Optional[FlightInfo] = None
         self._acmi_file = None
         self._reference_date = None
-        self._aircraft_object_id = '1'
+        self._aircraft_object_id = '3000102'
         self._longitude_format_regex = r"(\d{3})(\d{2})(\d{3})([EW])"
         self._latitude_format_regex = r"(\d{2})(\d{2})(\d{3})([NS])"
         self._float_format = '%.7f'
@@ -87,7 +87,7 @@ class AcmiTacViewFlightInfoExporter(FlightInfoExporter):
             additional_info = '|'.join([self._transform_longitude_format(timed_data.longitude),
                                         self._transform_latitude_format(timed_data.latitude), timed_data.gps_altitude])
 
-            self._write_file_line(self._aircraft_object_id + ',' + additional_info)
+            self._write_file_line(self._aircraft_object_id + ',T=' + additional_info)
 
     def _get_reference_year_mon_day_hour_min_sec(self) -> collections.namedtuple:
         ReferenceDateTime = collections.namedtuple('ReferenceDateTime',
