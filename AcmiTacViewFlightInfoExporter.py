@@ -19,6 +19,7 @@ class AcmiTacViewFlightInfoExporter(FlightInfoExporter):
     def export(self, flight_info: FlightInfo, destination_path: str):
         self.flight_info = flight_info
         self._acmi_file = open(destination_path, 'w')
+        self._reference_date = self._get_reference_year_mon_day_hour_min_sec()
 
         self._export_header()
         self._export_reference_time()
@@ -66,10 +67,20 @@ class AcmiTacViewFlightInfoExporter(FlightInfoExporter):
 
     def _export_timed_flight_data(self):
         for timed_data in self.flight_info.timed_flight_data:
-            r = self._get_reference_year_mon_day_hour_min_sec()
 
-            current_date = datetime.datetime(int(r.year), int(r.month), int(r.day),
-                                             int(r.hour), int(r.minute), int(r.second))
+            year = self._get_reference_year_mon_day_hour_min_sec().year
+            month = self._get_reference_year_mon_day_hour_min_sec().month
+            day = self._get_reference_year_mon_day_hour_min_sec().day
+
+            if len(self.flight_info.timed_flight_data) == 0:
+                raise RuntimeError('No timed flight data...')
+
+            hour = timed_data.utc_time[0:2]
+            minute = timed_data.utc_time[2:4]
+            second = timed_data.utc_time[4:6]
+
+            current_date = datetime.datetime(int(year), int(month), int(day),
+                                             int(hour), int(minute), int(second))
 
             self._write_file_line('#' + str((current_date - self._reference_date).seconds))
 
@@ -85,6 +96,10 @@ class AcmiTacViewFlightInfoExporter(FlightInfoExporter):
         reference_year = '20' + str(self.flight_info.header.flight_date[0])  # assume 21st century
         reference_month = str(self.flight_info.header.flight_date[1])
         reference_day = str(self.flight_info.header.flight_date[2])
+
+        if len(self.flight_info.timed_flight_data) == 0:
+            raise RuntimeError('No timed flight data...')
+
         reference_hour = self.flight_info.timed_flight_data[0].utc_time[0:2]
         reference_min = self.flight_info.timed_flight_data[0].utc_time[2:4]
         reference_sec = self.flight_info.timed_flight_data[0].utc_time[4:6]
