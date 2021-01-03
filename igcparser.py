@@ -54,7 +54,13 @@ class IGCParser:
                 self._parse_security(line)
             elif line.startswith('C'):
                 self._parse_preflight_declaration(line)
+            elif line.startswith('E'):
+                self._parse_events_section(line)
             self.current_line_number += 1
+
+    def _parse_events_section(self, line):
+        # self.flight_info.events...
+        pass
 
     def _parse_preflight_declaration(self, line):
         # self.flight_info.preflight_declaration...

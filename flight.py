@@ -153,6 +153,11 @@ class PreflightDeclaration:
     pass
 
 
+# E section of the IGC file
+class Events:
+    pass
+
+
 class FlightInfo:
     def __init__(self):
         self.header = Header()
@@ -165,6 +170,7 @@ class FlightInfo:
         self.j_section: Optional[JSection] = None
         self.security = SecuritySection()
         self.preflight_declaration = PreflightDeclaration()
+        self.events = Events()
 
     def __str__(self):
         res = ''
