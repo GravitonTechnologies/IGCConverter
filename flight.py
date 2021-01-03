@@ -149,6 +149,10 @@ class FlightRecorderInfo:
         return res
 
 
+class PreflightDeclaration:
+    pass
+
+
 class FlightInfo:
     def __init__(self):
         self.header = Header()
@@ -160,6 +164,7 @@ class FlightInfo:
         self.k_sections: List[KSection] = []
         self.j_section: Optional[JSection] = None
         self.security = SecuritySection()
+        self.preflight_declaration = PreflightDeclaration()
 
     def __str__(self):
         res = ''

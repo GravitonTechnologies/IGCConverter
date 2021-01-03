@@ -52,7 +52,13 @@ class IGCParser:
                 self._parse_k_section(line)
             elif line.startswith('G'):
                 self._parse_security(line)
+            elif line.startswith('C'):
+                self._parse_preflight_declaration(line)
             self.current_line_number += 1
+
+    def _parse_preflight_declaration(self, line):
+        # self.flight_info.preflight_declaration...
+        pass
 
     def _parse_security(self, line):
         self.flight_info.security.security_key = line.removeprefix('G')
