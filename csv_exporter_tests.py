@@ -6,7 +6,7 @@ import csv
 
 class CSVExporterTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.parser = IGCParser('test.igc')
+        self.parser = IGCParser('igc/test.igc')
         self.exporter = CSVFlightInfoExporter()
         self.export_file_name = 'test.csv'
 

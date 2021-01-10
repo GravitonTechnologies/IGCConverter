@@ -5,7 +5,7 @@ import pstats
 
 
 def run_igc_converter():
-    IGCConverter(os.getcwd(), 'acmi').convert_igc()
+    IGCConverter(os.getcwd() + os.sep + 'igc', 'acmi').convert_igc()
 
 
 def main():
