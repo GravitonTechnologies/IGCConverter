@@ -15,7 +15,7 @@ def main():
     run_igc_converter()
     pr.disable()
 
-    with open('formatted.txt', 'w') as stream:
+    with open('profiling_result.txt', 'w') as stream:
         stats = pstats.Stats(pr, stream=stream)
         stats.print_stats()
 
