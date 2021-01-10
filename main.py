@@ -16,7 +16,7 @@ def main():
         gui.mainloop()
     else:
         try:
-            IGCConverter(args.input, args.format)
+            IGCConverter(args.input, args.format).convert_igc()
         except ParseError as e:
             print(e)
         except RuntimeError as e:
