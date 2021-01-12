@@ -1,4 +1,4 @@
-from igc_converter import IGCConverter
+from igcconverter import IGCConverter
 import cProfile
 import os
 import pstats

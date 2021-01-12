@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
 from tkinter.ttk import Progressbar
-from igc_converter import IGCConverter, ConversionProgressObserver
+from igcconverter import IGCConverter, ConversionProgressObserver
 from igcparser import ParseError
 from typing import Optional
 import os

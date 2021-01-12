@@ -1,6 +1,6 @@
 from gui import IGCConverterGUI
 import argparse
-from igc_converter import IGCConverter
+from igcconverter import IGCConverter
 from igcparser import ParseError
 
 
