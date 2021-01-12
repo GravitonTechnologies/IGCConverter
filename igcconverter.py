@@ -82,7 +82,8 @@ class IGCConverter:
                     self._do_conversion(igc_file)
                 except Exception as e:
                     self._notify_observers_exception_raised(e)
-                self._notify_observers_file_converted()
+                else:
+                    self._notify_observers_file_converted()
             self._notify_observers_conversion_completed()
         else:
             self._notify_observers_conversion_started(1)
