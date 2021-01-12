@@ -61,14 +61,9 @@ class IGCConverterGUI(ConversionProgressObserver, IGCConverterExceptionObserver)
         converter = IGCConverter(self.selected_igc_path, self.selected_output_format)
         converter.add_exception_observer(self)
         converter.add_progress_observer(self)
-        try:
-            t = Thread(target=converter.convert_igc)
-            t.daemon = True
-            t.start()
-        except ParseError as e:
-            messagebox.showerror('Parse Error!', e)
-        except RuntimeError as e:
-            messagebox.showerror('Runtime Error!', e)
+        t = Thread(target=converter.convert_igc)
+        t.daemon = True
+        t.start()
 
     def _on_select_input_button_clicked(self):
         self.open_filedialog()
@@ -87,7 +82,7 @@ class IGCConverterGUI(ConversionProgressObserver, IGCConverterExceptionObserver)
         messagebox.showinfo('Conversion Complete!', "Converted {} IGC files".format(self._num_converted_files))
         self._num_converted_files = 0
 
-    def on_file_converted(self):
+    def on_file_converted(self, filename):
         self._num_converted_files += 1
         self.progressbar["value"] = self._num_converted_files
 

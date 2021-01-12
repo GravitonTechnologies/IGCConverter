@@ -1,5 +1,5 @@
 import os
-from igcparser import IGCParser, ParseError
+from igcparser import IGCParser
 from exporterfactory import FlightInfoExporterFactory
 import abc
 from typing import List
@@ -30,7 +30,7 @@ class ConversionProgressObserver:
         raise NotImplemented
 
     @abc.abstractmethod
-    def on_file_converted(self):
+    def on_file_converted(self, filename):
         raise NotImplemented
 
 
@@ -57,9 +57,9 @@ class IGCConverter:
         for o in self._progress_observers:
             o.on_conversion_started(num_items)
 
-    def _notify_observers_file_converted(self):
+    def _notify_observers_file_converted(self, filename):
         for o in self._progress_observers:
-            o.on_file_converted()
+            o.on_file_converted(filename)
 
     def _notify_observers_conversion_completed(self):
         for o in self._progress_observers:
@@ -86,7 +86,7 @@ class IGCConverter:
             except Exception as e:
                 self._notify_observers_exception_raised(e)
             else:
-                self._notify_observers_file_converted()
+                self._notify_observers_file_converted(igc_file)
         self._notify_observers_conversion_completed()
 
     def _do_conversion(self, igc_file_path: str):
