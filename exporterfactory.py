@@ -1,6 +1,6 @@
 from exporter import FlightInfoExporter
-from csv_exporter import CSVFlightInfoExporter
-from AcmiTacViewFlightInfoExporter import AcmiTacViewFlightInfoExporter
+from csvexporter import CSVFlightInfoExporter
+from acmitacviewflightinfoexporter import AcmiTacViewFlightInfoExporter
 import os.path
 
 

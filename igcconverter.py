@@ -1,6 +1,6 @@
 import os
 from igcparser import IGCParser
-from exporter_factory import FlightInfoExporterFactory
+from exporterfactory import FlightInfoExporterFactory
 import abc
 from typing import List
 
