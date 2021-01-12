@@ -5,7 +5,7 @@ import abc
 from typing import List
 
 
-def get_igc_files(directory: str):
+def get_igc_files(directory: str) -> List[str]:
     igc_files = []
     for filename in os.listdir(directory):
         if filename.endswith(".igc"):
@@ -72,28 +72,22 @@ class IGCConverter:
     def convert_igc(self):
         if os.path.isdir(self.igc_input):
             igc_files = get_igc_files(self.igc_input)
-            if len(igc_files) == 0:
-                self._notify_observers_exception_raised(
-                    RuntimeError("No IGC files found in directory '{}'".format(self.igc_input)))
+        else:
+            igc_files = [self.igc_input]
 
-            self._notify_observers_conversion_started(len(igc_files))
-            for igc_file in igc_files:
-                try:
-                    self._do_conversion(igc_file)
-                except Exception as e:
-                    self._notify_observers_exception_raised(e)
-                else:
-                    self._notify_observers_file_converted()
-            self._notify_observers_conversion_completed()
+        if len(igc_files) == 0:
+            self._notify_observers_exception_raised(
+                RuntimeError("No IGC files found in directory '{}'".format(self.igc_input)))
 
-        else:  # self.igc_input is a file
-            self._notify_observers_conversion_started(1)
+        self._notify_observers_conversion_started(len(igc_files))
+        for igc_file in igc_files:
             try:
-                self._do_conversion(self.igc_input)
+                self._do_conversion(igc_file)
             except Exception as e:
                 self._notify_observers_exception_raised(e)
             else:
-                self._notify_observers_conversion_completed()
+                self._notify_observers_file_converted()
+        self._notify_observers_conversion_completed()
 
     def _do_conversion(self, igc_file_path: str):
         igc_parser = IGCParser(igc_file_path)
