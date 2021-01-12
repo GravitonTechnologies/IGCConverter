@@ -85,13 +85,15 @@ class IGCConverter:
                 else:
                     self._notify_observers_file_converted()
             self._notify_observers_conversion_completed()
-        else:
+
+        else:  # self.igc_input is a file
             self._notify_observers_conversion_started(1)
             try:
                 self._do_conversion(self.igc_input)
             except Exception as e:
                 self._notify_observers_exception_raised(e)
-            self._notify_observers_conversion_completed()
+            else:
+                self._notify_observers_conversion_completed()
 
     def _do_conversion(self, igc_file_path: str):
         igc_parser = IGCParser(igc_file_path)
