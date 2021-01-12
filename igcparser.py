@@ -138,7 +138,10 @@ class IGCParser:
         if self.found_extension_header:
             data.extension_values = {}
             for (title, indices) in self.flight_info.extension_header.extended_data_indices.items():
-                data.extension_values[title] = line[indices[0] - 1:indices[1]]
+                try:
+                    data.extension_values[title] = line[indices[0] - 1:indices[1]]
+                except IndexError:
+                    self._raise_parse_error("invalid to parse timed flight data in '{}'".format(line))
 
         self.flight_info.timed_flight_data.append(data)
 
