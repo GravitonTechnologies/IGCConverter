@@ -123,8 +123,6 @@ class IGCParser:
 
     def _parse_timed_flight_data(self, line):
         data = TimedFlightData()
-        data.raw_data = line
-
         try:
             data.utc_time = line[1:7]
             data.latitude = line[7:15]
