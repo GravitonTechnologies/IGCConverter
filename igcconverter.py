@@ -80,7 +80,7 @@ class IGCConverter:
             for igc_file in igc_files:
                 try:
                     self._do_conversion(igc_file)
-                except ParseError as e:
+                except Exception as e:
                     self._notify_observers_exception_raised(e)
                 self._notify_observers_file_converted()
             self._notify_observers_conversion_completed()
@@ -88,9 +88,7 @@ class IGCConverter:
             self._notify_observers_conversion_started(1)
             try:
                 self._do_conversion(self.igc_input)
-            except ParseError as e:
-                self._notify_observers_exception_raised(e)
-            except OSError as e:
+            except Exception as e:
                 self._notify_observers_exception_raised(e)
             self._notify_observers_conversion_completed()
 
