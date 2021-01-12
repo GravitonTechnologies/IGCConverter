@@ -9,6 +9,9 @@ class IGCConverterCLI(ConversionProgressObserver, IGCConverterExceptionObserver)
         self._prompt = '> '
         self._user_input = ''
         self._new_line_indentation = ' ' * 4
+        self._formats_cmd_pattern = re.compile(r'formats?')
+        self._convert_cmd_pattern = re.compile(r"(conv?e?r?t?)\s+(\w+)\s+(\w+)")
+        self._help_cmd_pattern = re.compile(r'help')
 
     def mainloop(self):
         self._ask_user_input()
@@ -44,17 +47,18 @@ class IGCConverterCLI(ConversionProgressObserver, IGCConverterExceptionObserver)
         print(e)
 
     def _handle_user_input(self):
-        if self._user_input.startswith('help'):
+        if re.match(self._help_cmd_pattern, self._user_input):
             self._handle_help_cmd()
-        elif self._user_input.startswith('convert'):
+        elif re.match(self._convert_cmd_pattern, self._user_input):
             self._handle_convert_cmd()
-        elif self._user_input.startswith('formats'):
+        elif re.match(self._formats_cmd_pattern, self._user_input):
             self._handle_formats_cmd()
         else:
             print("Invalid command: '{}'".format(self._user_input))
+            self._handle_help_cmd()
 
     def _handle_convert_cmd(self):
-        match = re.match(r"(convert)\s+(\w+)\s+(\w+)", self._user_input)
+        match = re.match(self._convert_cmd_pattern, self._user_input)
         if not match:
             print("invalid syntax, use: 'convert input format'")
             return
