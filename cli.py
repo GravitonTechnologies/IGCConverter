@@ -1,5 +1,4 @@
 from igcconverter import IGCConverter, ConversionProgressObserver, IGCConverterExceptionObserver
-from igcparser import ParseError
 import re
 
 
@@ -9,7 +8,7 @@ class IGCConverterCLI(ConversionProgressObserver, IGCConverterExceptionObserver)
         self.num_files_to_convert = 0
         self._prompt = '> '
         self._user_input = ''
-        self._help_text = 'This is the help text...'
+        self._help_text = 'convert [input] [format]'
 
     def mainloop(self):
         self._ask_user_input()
