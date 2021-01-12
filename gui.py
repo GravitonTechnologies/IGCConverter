@@ -3,14 +3,12 @@ from tkinter import filedialog
 from tkinter import messagebox
 from tkinter.ttk import Progressbar
 from igcconverter import IGCConverter, ConversionProgressObserver, IGCConverterExceptionObserver
-from igcparser import ParseError
 from typing import Optional
 import os
 from threading import Thread
 
 
 class IGCConverterGUI(ConversionProgressObserver, IGCConverterExceptionObserver):
-    SupportedFormats = ['csv', 'acmi-TacView']
 
     def __init__(self):
         self.app = tk.Tk()
@@ -39,8 +37,8 @@ class IGCConverterGUI(ConversionProgressObserver, IGCConverterExceptionObserver)
 
     def _setup_dropdown(self):
         self._output_format_dropdown = tk.StringVar(self.app)
-        self._output_format_dropdown.set(IGCConverterGUI.SupportedFormats[0])
-        opt = tk.OptionMenu(self.app, self._output_format_dropdown, *IGCConverterGUI.SupportedFormats,
+        self._output_format_dropdown.set(IGCConverter.SupportedFormats[0])
+        opt = tk.OptionMenu(self.app, self._output_format_dropdown, *IGCConverter.SupportedFormats,
                             command=self._on_format_chosen)
         opt.config(width=90, font=('Helvetica', 12))
         opt.pack()

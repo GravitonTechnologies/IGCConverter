@@ -5,6 +5,8 @@ import os.path
 
 
 class FlightInfoExporterFactory:
+    SupportedFormats = ('csv', 'acmi-TacView')
+
     def __init__(self):
         self.exporters = {'csv': CSVFlightInfoExporter, 'acmi': AcmiTacViewFlightInfoExporter}
 

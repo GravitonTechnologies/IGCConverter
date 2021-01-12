@@ -8,13 +8,20 @@ class IGCConverterCLI(ConversionProgressObserver, IGCConverterExceptionObserver)
         self.num_files_to_convert = 0
         self._prompt = '> '
         self._user_input = ''
-        self._help_text = 'convert [input] [format]'
+        self._new_line_indentation = ' ' * 4
 
     def mainloop(self):
         self._ask_user_input()
         while self._user_input != 'quit':
             self._handle_user_input()
             self._ask_user_input()
+
+    @property
+    def _help_text(self) -> str:
+        s = 'Available commands: \n'
+        s += self._new_line_indentation + 'convert [input] [format] ... to convert igc files\n'
+        s += self._new_line_indentation + 'formats ... to get a list of available formats'
+        return s
 
     def _ask_user_input(self):
         self._user_input = input(self._prompt).strip()
@@ -41,6 +48,8 @@ class IGCConverterCLI(ConversionProgressObserver, IGCConverterExceptionObserver)
             self._handle_help_cmd()
         elif self._user_input.startswith('convert'):
             self._handle_convert_cmd()
+        elif self._user_input.startswith('formats'):
+            self._handle_formats_cmd()
         else:
             print("Invalid command: '{}'".format(self._user_input))
 
@@ -56,6 +65,12 @@ class IGCConverterCLI(ConversionProgressObserver, IGCConverterExceptionObserver)
         converter.add_exception_observer(self)
         converter.add_progress_observer(self)
         converter.convert_igc()
+
+    def _handle_formats_cmd(self):
+        s = 'Available formats: \n'
+        for f in IGCConverter.SupportedFormats:
+            s += self._new_line_indentation + f + '\n'
+        print(s)
 
     def _handle_help_cmd(self):
         print(self._help_text)
