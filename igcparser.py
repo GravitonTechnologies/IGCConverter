@@ -145,6 +145,10 @@ class IGCParser:
     def _parse_extension_header(self, line):
         self.found_extension_header = True
         line = line.removeprefix('I')
+
+        if not re.fullmatch(r"\d{2}\w+", line):
+            self._raise_parse_error("Extension Header parse error: '{}'".format(line))
+
         num_extensions = int(line[0:2])
         self.flight_info.extension_header.num_extensions = num_extensions
 
