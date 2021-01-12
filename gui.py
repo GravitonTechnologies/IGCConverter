@@ -2,14 +2,14 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
 from tkinter.ttk import Progressbar
-from igcconverter import IGCConverter, ConversionProgressObserver
+from igcconverter import IGCConverter, ConversionProgressObserver, IGCConverterExceptionObserver
 from igcparser import ParseError
 from typing import Optional
 import os
 from threading import Thread
 
 
-class IGCConverterGUI(ConversionProgressObserver):
+class IGCConverterGUI(ConversionProgressObserver, IGCConverterExceptionObserver):
     SupportedFormats = ['csv', 'acmi-TacView']
 
     def __init__(self):
@@ -59,7 +59,8 @@ class IGCConverterGUI(ConversionProgressObserver):
             messagebox.showerror('Error', 'No input was selected!')
             return
         converter = IGCConverter(self.selected_igc_path, self.selected_output_format)
-        converter.add_observer(self)
+        converter.add_exception_observer(self)
+        converter.add_progress_observer(self)
         try:
             t = Thread(target=converter.convert_igc)
             t.daemon = True
@@ -89,3 +90,6 @@ class IGCConverterGUI(ConversionProgressObserver):
     def on_file_converted(self):
         self._num_converted_files += 1
         self.progressbar["value"] = self._num_converted_files
+
+    def on_exception_raised(self, e: Exception):
+        messagebox.showerror('An Error Occurred!', e)

@@ -1,5 +1,5 @@
 import os
-from igcparser import IGCParser
+from igcparser import IGCParser, ParseError
 from exporterfactory import FlightInfoExporterFactory
 import abc
 from typing import List
@@ -34,42 +34,62 @@ class ConversionProgressObserver:
         raise NotImplemented
 
 
+class IGCConverterExceptionObserver:
+    @abc.abstractmethod
+    def on_exception_raised(self, e: Exception):
+        raise NotImplemented
+
+
 class IGCConverter:
     def __init__(self, igc_input: str, output_format):
         self.igc_input = igc_input
         self.output_format = output_format
-        self._observers: List[ConversionProgressObserver] = []
+        self._progress_observers: List[ConversionProgressObserver] = []
+        self._exception_observers: List[IGCConverterExceptionObserver] = []
 
-    def add_observer(self, o: ConversionProgressObserver):
-        self._observers.append(o)
+    def add_progress_observer(self, o: ConversionProgressObserver):
+        self._progress_observers.append(o)
+
+    def add_exception_observer(self, o: IGCConverterExceptionObserver):
+        self._exception_observers.append(o)
 
     def _notify_observers_conversion_started(self, num_items: int):
-        for o in self._observers:
+        for o in self._progress_observers:
             o.on_conversion_started(num_items)
 
     def _notify_observers_file_converted(self):
-        for o in self._observers:
+        for o in self._progress_observers:
             o.on_file_converted()
 
     def _notify_observers_conversion_completed(self):
-        for o in self._observers:
+        for o in self._progress_observers:
             o.on_conversion_completed()
+
+    def _notify_observers_exception_raised(self, e: Exception):
+        for o in self._exception_observers:
+            o.on_exception_raised(e)
 
     def convert_igc(self):
         if os.path.isdir(self.igc_input):
             igc_files = get_igc_files(self.igc_input)
             if len(igc_files) == 0:
-                raise RuntimeError("No IGC files found in directory '{}'".format(self.igc_input))
+                self._notify_observers_exception_raised(
+                    RuntimeError("No IGC files found in directory '{}'".format(self.igc_input)))
 
             self._notify_observers_conversion_started(len(igc_files))
             for igc_file in igc_files:
-                self._do_conversion(igc_file)
+                try:
+                    self._do_conversion(igc_file)
+                except ParseError as e:
+                    self._notify_observers_exception_raised(e)
                 self._notify_observers_file_converted()
             self._notify_observers_conversion_completed()
-
         else:
             self._notify_observers_conversion_started(1)
-            self._do_conversion(self.igc_input)
+            try:
+                self._do_conversion(self.igc_input)
+            except ParseError as e:
+                self._notify_observers_exception_raised(e)
             self._notify_observers_conversion_completed()
 
     def _do_conversion(self, igc_file_path: str):
