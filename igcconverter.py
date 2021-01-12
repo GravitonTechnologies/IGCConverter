@@ -90,6 +90,8 @@ class IGCConverter:
                 self._do_conversion(self.igc_input)
             except ParseError as e:
                 self._notify_observers_exception_raised(e)
+            except OSError as e:
+                self._notify_observers_exception_raised(e)
             self._notify_observers_conversion_completed()
 
     def _do_conversion(self, igc_file_path: str):
