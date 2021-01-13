@@ -24,9 +24,9 @@ class IGCConverterCLI(ConversionProgressObserver, IGCConverterExceptionObserver)
     def _help_text(self) -> str:
         s = 'Available commands: \n'
         s += self._new_line_indentation + 'convert [input] [format] ... to convert igc files.\n'
-        s += self._new_line_indentation + 'formats ... to get a list of available formats.'
-        s += self._new_line_indentation + 'quit ... to quit.'
-        s += self._new_line_indentation + 'help ... to view this.'
+        s += self._new_line_indentation + 'formats ... to get a list of available formats.\n'
+        s += self._new_line_indentation + 'quit ... to quit.\n'
+        s += self._new_line_indentation + 'help ... to view this help.'
         return s
 
     def _ask_user_input(self):
@@ -63,7 +63,7 @@ class IGCConverterCLI(ConversionProgressObserver, IGCConverterExceptionObserver)
     def _handle_convert_cmd(self):
         match = re.match(r"(conv?e?r?t?)\s+(\w+)\s+(\w+)", self._user_input)
         if not match:
-            print("invalid syntax, use: 'convert input format'")
+            print("invalid syntax, use: 'convert [input] [format]'")
             return
 
         source = match.group(2)
