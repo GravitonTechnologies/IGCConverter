@@ -12,18 +12,21 @@ class IGCConverterCLI(ConversionProgressObserver, IGCConverterExceptionObserver)
         self._formats_cmd_pattern = re.compile(r'formats?|fmts?', re.IGNORECASE)
         self._convert_cmd_pattern = re.compile(r"(conv?e?r?t?)")
         self._help_cmd_pattern = re.compile(r'help', re.IGNORECASE)
+        self._quit_cmd_pattern = re.compile(r'quit')
 
     def mainloop(self):
         self._ask_user_input()
-        while self._user_input != 'quit':
+        while not re.fullmatch(self._quit_cmd_pattern, self._user_input):
             self._handle_user_input()
             self._ask_user_input()
 
     @property
     def _help_text(self) -> str:
         s = 'Available commands: \n'
-        s += self._new_line_indentation + 'convert [input] [format] ... to convert igc files\n'
-        s += self._new_line_indentation + 'formats ... to get a list of available formats'
+        s += self._new_line_indentation + 'convert [input] [format] ... to convert igc files.\n'
+        s += self._new_line_indentation + 'formats ... to get a list of available formats.'
+        s += self._new_line_indentation + 'quit ... to quit.'
+        s += self._new_line_indentation + 'help ... to view this.'
         return s
 
     def _ask_user_input(self):
