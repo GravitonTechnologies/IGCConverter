@@ -1,22 +1,9 @@
 from PyQt5.QtWidgets import QApplication, QProgressBar, QPushButton, QVBoxLayout, \
-    QComboBox, QWidget, QFileDialog, QMessageBox
+    QComboBox, QWidget, QFileDialog, QMessageBox, QLabel
 from igcconverter import IGCConverter, ConversionProgressObserver, IGCConverterExceptionObserver
 from utilities import get_selected_export_format
 from typing import Optional
-from PyQt5.QtCore import QThreadPool, QRunnable
-
-
-class Worker(QRunnable):
-
-    def __init__(self, gui):
-        super().__init__()
-        self.gui = gui
-
-    def run(self):
-        converter = IGCConverter(self.gui.selected_igc_path, self.gui.selected_output_format)
-        converter.add_exception_observer(self.gui)
-        converter.add_progress_observer(self.gui)
-        converter.convert_igc()
+from threading import Thread
 
 
 class IGCQtConverterGUI(ConversionProgressObserver, IGCConverterExceptionObserver):
@@ -30,6 +17,9 @@ class IGCQtConverterGUI(ConversionProgressObserver, IGCConverterExceptionObserve
         self._formats_devices_combo = QComboBox()
         self._setup_formats_devices_combo()
         self.selected_output_format = get_selected_export_format(str(self._formats_devices_combo.currentText()))
+
+        self._status_label = QLabel()
+        self.setup_status_label()
 
         self._progress_bar = QProgressBar()
         self._setup_progress_bar()
@@ -47,6 +37,10 @@ class IGCQtConverterGUI(ConversionProgressObserver, IGCConverterExceptionObserve
         self._convert_button.clicked.connect(self._on_convert_button_clicked)
         self.layout.addWidget(self._convert_button)
 
+    def setup_status_label(self):
+        self._status_label.setText("")
+        self.layout.addWidget(self._status_label)
+
     def _on_convert_button_clicked(self):
         if self.selected_igc_path is None:
             msg = QMessageBox()
@@ -56,7 +50,11 @@ class IGCQtConverterGUI(ConversionProgressObserver, IGCConverterExceptionObserve
             msg.setStandardButtons(QMessageBox.Ok)
             msg.exec_()
         else:
-            Worker(self).run()
+            converter = IGCConverter(self.selected_igc_path, self.selected_output_format)
+            converter.add_exception_observer(self)
+            converter.add_progress_observer(self)
+            t = Thread(target=converter.convert_igc)
+            t.start()
 
     def _setup_select_input_button(self):
         self._select_input_button.setText("Choose Input")
@@ -79,16 +77,21 @@ class IGCQtConverterGUI(ConversionProgressObserver, IGCConverterExceptionObserve
         self.selected_output_format = get_selected_export_format(str(value))
 
     def on_conversion_started(self, num_items: int):
+        self._status_label.setText("Working...")
         self._num_converted_files = 0
         self._progress_bar.setMaximum(num_items)
 
     def on_conversion_completed(self):
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Information)
-        msg.setText("Conversion Complete!")
-        msg.setInformativeText("Converted {} files.".format(self._num_converted_files))
-        msg.setStandardButtons(QMessageBox.Ok)
-        msg.exec_()
+        self._status_label.setText("Done!")
+
+        # msg = QMessageBox()
+        # msg.setIcon(QMessageBox.Information)
+        # msg.setText("Conversion Complete!")
+        # msg.setInformativeText("Converted {} files.".format(self._num_converted_files))
+        # msg.setStandardButtons(QMessageBox.Ok)
+
+        # TODO this causes a problem on mac...
+        # msg.open()
 
     def on_file_converted(self, filename):
         self._num_converted_files += 1
