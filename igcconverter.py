@@ -74,7 +74,10 @@ class IGCConverter:
     def convert_igc(self):
         if os.path.isdir(self.igc_input):
             igc_files = get_igc_files(self.igc_input)
+        elif isinstance(self.igc_input, list):
+            igc_files = self.igc_input
         else:
+            assert os.path.isfile(self.igc_input)
             igc_files = [self.igc_input]
 
         if len(igc_files) == 0:

@@ -3,7 +3,6 @@ from PyQt5.QtWidgets import QApplication, QProgressBar, QPushButton, QVBoxLayout
 from igcconverter import IGCConverter, ConversionProgressObserver, IGCConverterExceptionObserver
 from utilities import get_selected_export_format
 from typing import Optional
-from threading import Thread
 
 
 class IGCQtConverterGUI(ConversionProgressObserver, IGCConverterExceptionObserver):
@@ -38,11 +37,13 @@ class IGCQtConverterGUI(ConversionProgressObserver, IGCConverterExceptionObserve
         if self.selected_igc_path is None:
             self._show_dialog("No Input Selected!", "An input source must be selected.", QMessageBox.Critical)
         else:
-            converter = IGCConverter(self.selected_igc_path, self.selected_output_format)
-            converter.add_exception_observer(self)
-            converter.add_progress_observer(self)
-            t = Thread(target=converter.convert_igc)
-            t.start()
+            self._do_conversion()
+
+    def _do_conversion(self):
+        converter = IGCConverter(self.selected_igc_path, self.selected_output_format)
+        converter.add_exception_observer(self)
+        converter.add_progress_observer(self)
+        converter.convert_igc()
 
     def _setup_select_input_button(self):
         self._select_input_button.setText("Choose Input")
