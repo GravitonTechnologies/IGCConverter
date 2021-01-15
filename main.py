@@ -7,15 +7,15 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--format", default='csv', type=str, help='output format')
     parser.add_argument("--input", type=str, help='IGC source', default='igc')
-    parser.add_argument('--gui', action='store_true', help='start in GUI mode')
+    parser.add_argument('--cli', action='store_true', help='start in CLI mode')
     args = parser.parse_args()
 
-    if args.gui:
-        gui = IGCConverterGUI()
-        gui.mainloop()
-    else:
+    if args.cli:
         converter = IGCConverterCLI()
         converter.mainloop()
+    else:
+        gui = IGCConverterGUI()
+        gui.mainloop()
 
 
 if __name__ == '__main__':
