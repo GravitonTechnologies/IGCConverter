@@ -8,7 +8,7 @@ import os
 from threading import Thread
 
 
-class IGCConverterGUI(ConversionProgressObserver, IGCConverterExceptionObserver):
+class IGCTKConverterGUI(ConversionProgressObserver, IGCConverterExceptionObserver):
 
     def __init__(self):
         self.app = tk.Tk()

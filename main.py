@@ -1,4 +1,4 @@
-from gui import IGCConverterGUI
+from gui import IGCTKConverterGUI
 from cli import IGCConverterCLI
 import argparse
 
@@ -14,7 +14,7 @@ def main():
         converter = IGCConverterCLI()
         converter.mainloop()
     else:
-        gui = IGCConverterGUI()
+        gui = IGCTKConverterGUI()
         gui.mainloop()
 
 
