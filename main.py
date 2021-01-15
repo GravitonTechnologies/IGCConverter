@@ -2,6 +2,7 @@ from tkgui import IGCTKConverterGUI
 from qtgui import IGCQtConverterGUI
 from cli import IGCConverterCLI
 import argparse
+from sys import platform
 
 
 def main():
@@ -15,8 +16,12 @@ def main():
         converter = IGCConverterCLI()
         converter.mainloop()
     else:
-        gui = IGCQtConverterGUI()
-        # gui = IGCTKConverterGUI()
+        # if platform == "darwin":
+        #     gui = IGCTKConverterGUI()
+        # else:
+        #     gui = IGCQtConverterGUI()
+
+        gui = IGCTKConverterGUI()
         gui.mainloop()
 
 

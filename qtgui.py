@@ -18,9 +18,6 @@ class IGCQtConverterGUI(ConversionProgressObserver, IGCConverterExceptionObserve
         self._setup_formats_devices_combo()
         self.selected_output_format = get_selected_export_format(str(self._formats_devices_combo.currentText()))
 
-        self._status_label = QLabel()
-        self.setup_status_label()
-
         self._progress_bar = QProgressBar()
         self._setup_progress_bar()
 
@@ -29,7 +26,7 @@ class IGCQtConverterGUI(ConversionProgressObserver, IGCConverterExceptionObserve
 
         self._select_input_button = QPushButton()
         self._setup_select_input_button()
-
+        self.window.setWindowTitle("IGC Converter")
         self.window.setLayout(self.layout)
 
     def _setup_convert_button(self):
@@ -37,18 +34,9 @@ class IGCQtConverterGUI(ConversionProgressObserver, IGCConverterExceptionObserve
         self._convert_button.clicked.connect(self._on_convert_button_clicked)
         self.layout.addWidget(self._convert_button)
 
-    def setup_status_label(self):
-        self._status_label.setText("")
-        self.layout.addWidget(self._status_label)
-
     def _on_convert_button_clicked(self):
         if self.selected_igc_path is None:
-            msg = QMessageBox()
-            msg.setIcon(QMessageBox.Critical)
-            msg.setText("No Input Selected!")
-            msg.setInformativeText("An input source must be selected.")
-            msg.setStandardButtons(QMessageBox.Ok)
-            msg.exec_()
+            self._show_dialog("No Input Selected!", "An input source must be selected.", QMessageBox.Critical)
         else:
             converter = IGCConverter(self.selected_igc_path, self.selected_output_format)
             converter.add_exception_observer(self)
@@ -66,6 +54,7 @@ class IGCQtConverterGUI(ConversionProgressObserver, IGCConverterExceptionObserve
 
     def _setup_progress_bar(self):
         self._progress_bar.setMinimum(0)
+        self._progress_bar.setValue(0)
         self.layout.addWidget(self._progress_bar)
 
     def _setup_formats_devices_combo(self):
@@ -77,32 +66,26 @@ class IGCQtConverterGUI(ConversionProgressObserver, IGCConverterExceptionObserve
         self.selected_output_format = get_selected_export_format(str(value))
 
     def on_conversion_started(self, num_items: int):
-        self._status_label.setText("Working...")
         self._num_converted_files = 0
+        self._progress_bar.setValue(0)
         self._progress_bar.setMaximum(num_items)
 
     def on_conversion_completed(self):
-        self._status_label.setText("Done!")
-
-        # msg = QMessageBox()
-        # msg.setIcon(QMessageBox.Information)
-        # msg.setText("Conversion Complete!")
-        # msg.setInformativeText("Converted {} files.".format(self._num_converted_files))
-        # msg.setStandardButtons(QMessageBox.Ok)
-
-        # TODO this causes a problem on mac...
-        # msg.open()
+        self._show_dialog("Conversion Complete!", "Converted {} files.".format(self._num_converted_files))
 
     def on_file_converted(self, filename):
         self._num_converted_files += 1
         self._progress_bar.setValue(self._num_converted_files)
 
     def on_exception_raised(self, e: Exception):
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Critical)
-        msg.setText("An Error Occurred!")
-        msg.setInformativeText(str(e))
-        msg.setStandardButtons(QMessageBox.Ok)
+        self._show_dialog("An Error Occurred!", str(e), icon=QMessageBox.Critical)
+
+    def _show_dialog(self, text, informative_text, icon=QMessageBox.Information, buttons=QMessageBox.Ok):
+        msg = QMessageBox(self.window)
+        msg.setIcon(icon)
+        msg.setText(text)
+        msg.setInformativeText(informative_text)
+        msg.setStandardButtons(buttons)
         msg.exec_()
 
     def mainloop(self):
