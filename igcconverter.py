@@ -43,7 +43,7 @@ class IGCConverterExceptionObserver:
 class IGCConverter:
     SupportedFormats = FlightInfoExporterFactory.SupportedFormats
 
-    def __init__(self, igc_input: str, output_format):
+    def __init__(self, igc_input, output_format):
         self.igc_input = igc_input
         self.output_format = output_format
         self._progress_observers: List[ConversionProgressObserver] = []
