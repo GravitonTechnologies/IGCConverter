@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QApplication, QProgressBar, QPushButton, QVBoxLayout, \
-    QComboBox, QWidget, QFileDialog, QMessageBox, QLabel
+    QComboBox, QWidget, QFileDialog, QMessageBox
 from igcconverter import IGCConverter, ConversionProgressObserver, IGCConverterExceptionObserver
 from utilities import get_selected_export_format
 from typing import Optional
