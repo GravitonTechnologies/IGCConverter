@@ -12,7 +12,7 @@ class IGCTKConverterGUI(ConversionProgressObserver, IGCConverterExceptionObserve
 
     def __init__(self):
         self.app = tk.Tk()
-        self.app.geometry('500x50')
+        self.app.geometry('250x60')
         self.app.winfo_toplevel().title("IGC Converter")
         self.selected_igc_path = None
         self._num_converted_files = 0
