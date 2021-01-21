@@ -12,17 +12,23 @@ class IGCTKConverterGUI(ConversionProgressObserver, IGCConverterExceptionObserve
 
     def __init__(self):
         self.app = tk.Tk()
-        self.app.geometry('250x60')
+        self.app.geometry('350x70')
         self.app.winfo_toplevel().title("IGC Converter")
         self.selected_igc_path = None
         self._num_converted_files = 0
         self._setup_dropdown()
+        self._setup_input_path_label()
         self._setup_buttons()
         self._setup_progressbar()
         self.selected_output_format = get_selected_export_format(self._output_format_dropdown.get())
 
     def mainloop(self):
         self.app.mainloop()
+
+    def _setup_input_path_label(self):
+        self.input_path_label = tk.Label(self.app)
+        self.input_path_label.pack()
+        self.input_path_label.config(text='No Input Selected')
 
     def _setup_progressbar(self):
         self.progressbar = Progressbar(self.app)
@@ -64,6 +70,7 @@ class IGCTKConverterGUI(ConversionProgressObserver, IGCConverterExceptionObserve
 
     def open_filedialog(self):
         self.selected_igc_path = filedialog.askdirectory(initialdir=os.getcwd(), title="Select a directory")
+        self.input_path_label.config(text=self.selected_igc_path)
 
     def on_conversion_started(self, num_items: int):
         self.progressbar["maximum"] = num_items
