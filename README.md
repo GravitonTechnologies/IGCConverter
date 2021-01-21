@@ -1,5 +1,9 @@
 # IGCConverter
 
+# Notes
+
+Create a stand-alone bundle using: *pyinstaller -c -F main.py*
+
 # Todo
 
 - Unit tests
