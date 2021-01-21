@@ -1,8 +1,6 @@
 from tkgui import IGCTKConverterGUI
-from qtgui import IGCQtConverterGUI
 from cli import IGCConverterCLI
 import argparse
-from sys import platform
 
 
 def main():

@@ -1,6 +1,5 @@
 from flight import FlightInfo, TimedFlightData, DifferentialGPS, KSection, JSection
 import re
-import datetime
 
 
 class ParseError(Exception):
